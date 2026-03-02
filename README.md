@@ -1,5 +1,3 @@
-[![CapSolver](assets/CapSolver.png)](https://www.capsolver.com/?utm_source=github&utm_medium=repo&utm_campaign=scraping&utm_term=tls-api)
-
 # 🔒 TlsApi
 
 A wrapper for [tls-client](https://github.com/bogdanfinn/tls-client) library.
