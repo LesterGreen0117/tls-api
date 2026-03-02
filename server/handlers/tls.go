@@ -385,8 +385,17 @@ func (t *tlsData) extractWithRandomExtensionOrder(ctx fiber.Ctx) error {
 func (t *tlsData) extractHeaderOrder(ctx fiber.Ctx) error {
 	headerOrder := ctx.Get(tlsHeaderOrderHeaderKey)
 
+	// Make it truly optional - use default if empty
 	if headerOrder == "" {
-		return fmt.Errorf("no %s", tlsHeaderOrderHeaderKey)
+		// Default header order for common headers
+		t.tlsHeaderOrder = []string{
+			"accept",
+			"accept-language",
+			"accept-encoding",
+			"user-agent",
+			"content-type",
+		}
+		return nil
 	}
 
 	headerOrder = strings.ReplaceAll(headerOrder, " ", "")
@@ -405,8 +414,16 @@ func (t *tlsData) extractHeaderOrder(ctx fiber.Ctx) error {
 func (t *tlsData) extractPseudoHeaderOrder(ctx fiber.Ctx) error {
 	pseudoHeaderOrder := ctx.Get(tlsPseudoHeaderOrderHeaderKey)
 
+	// Make it truly optional - use default if empty
 	if pseudoHeaderOrder == "" {
-		return fmt.Errorf("no %s", tlsPseudoHeaderOrderHeaderKey)
+		// Default pseudo-header order (standard HTTP/2 order)
+		t.tlsPseudoHeaderOrder = []string{
+			":method",
+			":authority",
+			":scheme",
+			":path",
+		}
+		return nil
 	}
 
 	pseudoHeaderOrder = strings.ReplaceAll(pseudoHeaderOrder, " ", "")
