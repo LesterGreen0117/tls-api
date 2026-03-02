@@ -8,7 +8,7 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 
 ## 🚀 Installation
 
-1. `git clone https://github.com/brianxor/tls-api.git`
+1. `git clone https://github.com/LesterGreen0117/tls-api.git`
 2. `cd tls-api`
 3. `go run .`
 
@@ -28,7 +28,7 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 | `x-tls-url`                         | 🌐 Request URL.                                                                                                                                                        | No       | `N/A`   |
 | `x-tls-method`                      | 📮 Request method.                                                                                                                                                     | No       | `N/A`   |
 | `x-tls-proxy`                       | 🔄 Proxy. Formats: `ip:port:user:pass`, `ip:port`                                                                                                                      | Yes      | `N/A`   |
-| `x-tls-profile`                     | 👤 TLS client profile. Available profiles: [See here](https://github.com/bogdanfinn/tls-client/blob/18abae60034c6d510a17b62c936efafdf53ebb80/profiles/profiles.go#L10) | No       | `N/A`   |
+| `x-tls-profile`                     | 👤 TLS client profile. Available profiles: [See here](https://github.com/bogdanfinn/tls-client/blob/master/profiles/profiles.go)                                       | No       | `N/A`   |
 | `x-tls-client-timeout`              | ⏱️ HTTP client timeout.                                                                                                                                                | Yes      | `30`    |
 | `x-tls-follow-redirects`            | 🔀 Follow redirects.                                                                                                                                                   | Yes      | `true`  |
 | `x-tls-force-http1`                 | 🔌 Force HTTP/1.1.                                                                                                                                                     | Yes      | `false` |
@@ -42,7 +42,7 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 
 ## 🐛 Report Issues
 
-Found a bug? Please [open an issue](https://github.com/brianxor/tls-api/issues).
+Found a bug? Please [open an issue](https://github.com/LesterGreen0117/tls-api/issues).
 
 
 By reporting an issue you help improve the project.
