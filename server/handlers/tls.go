@@ -55,7 +55,7 @@ func HandleTlsForwardRoute(ctx fiber.Ctx) error {
 	reqResponse, err := doRequest(tlsConfig)
 
 	if err != nil {
-		return handleErrorResponse(ctx, "error while doing request")
+		return handleErrorResponse(ctx, fmt.Sprintf("error while doing request: %s", err))
 	}
 
 	setResponseHeaders(ctx, reqResponse)
@@ -67,7 +67,7 @@ func HandleTlsForwardRoute(ctx fiber.Ctx) error {
 type requestResponse struct {
 	responseBody    []byte
 	responseCode    int
-	responseHeaders map[string]string
+	responseHeaders map[string][]string
 	responseCookies []*http.Cookie
 }
 
@@ -379,7 +379,7 @@ func (t *tlsData) extractWithRandomExtensionOrder(ctx fiber.Ctx) error {
 
 	t.tlsWithRandomExtensionOrder = tlsWithRandomExtensionOrder
 
-	return err
+	return nil
 }
 
 func (t *tlsData) extractHeaderOrder(ctx fiber.Ctx) error {
@@ -451,8 +451,11 @@ func setRequestHeaders(tlsData *tlsData, req *http.Request) {
 			continue
 		}
 
-		for _, value := range headerValues {
-			req.Header.Set(headerKey, value)
+		if len(headerValues) > 0 {
+			req.Header.Set(headerKey, headerValues[0])
+			for _, value := range headerValues[1:] {
+				req.Header.Add(headerKey, value)
+			}
 		}
 	}
 
@@ -460,14 +463,12 @@ func setRequestHeaders(tlsData *tlsData, req *http.Request) {
 	req.Header[http.PHeaderOrderKey] = tlsData.tlsPseudoHeaderOrder
 }
 
-func getResponseHeaders(resp *http.Response) map[string]string {
-	responseHeaders := make(map[string]string)
+func getResponseHeaders(resp *http.Response) map[string][]string {
+	responseHeaders := make(map[string][]string)
 
 	for key, values := range resp.Header {
-		for _, value := range values {
-			if key != "Content-Length" && key != "Content-Encoding" {
-				responseHeaders[key] = value
-			}
+		if key != "Content-Length" && key != "Content-Encoding" {
+			responseHeaders[key] = values
 		}
 	}
 
@@ -480,8 +481,13 @@ func setResponseHeaders(ctx fiber.Ctx, reqResponse *requestResponse) {
 	}
 
 	if len(reqResponse.responseHeaders) > 0 {
-		for key, value := range reqResponse.responseHeaders {
-			ctx.Set(key, value)
+		for key, values := range reqResponse.responseHeaders {
+			if len(values) > 0 {
+				ctx.Set(key, values[0])
+				for _, value := range values[1:] {
+					ctx.Response().Header.Add(key, value)
+				}
+			}
 		}
 	}
 }
